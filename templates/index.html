@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Audintel - Chat con PDFs</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <!-- Aura futurista -->
+  <div class="aura" id="aura"></div>
+
+  <main class="chat-container">
+    <header>
+      <h1>⚡ Audintel</h1>
+      <p class="subtitle">Auditor inteligente potenciado con IA</p>
+    </header>
+
+    <!-- Mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Chatbox -->
+    <section class="chatbox" id="chatbox">
+      {% if chat_history %}
+        {% for chat in chat_history %}
+          <div class="bubble user"><span>Tú:</span> {{ chat.question }}</div>
+          <div class="bubble assistant markdown">
+            <span>Audintel:</span> {{ chat.answer_html|safe }}
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="no-chat">🌌 Haz tu primera pregunta...</div>
+      {% endif %}
+    </section>
+
+    <!-- Selección de ente -->
+    <label for="ente" style="font-weight:500;">Selecciona el tipo de ente:</label>
+    <select name="ente" id="ente" form="ask-form" required>
+      <option value="">-- Selecciona --</option>
+      <option value="autonomo">Ente Autónomo</option>
+      <option value="paraestatal">Paraestatal</option>
+      <option value="centralizada">Dependencia Centralizada</option>
+      <option value="desconcentrada">Dependencia Desconcentrada</option>
+      <option value="descentralizada">Entidad Descentralizada</option>
+    </select>
+
+    <!-- Formulario de pregunta -->
+    <form id="ask-form" method="post" action="/ask" class="ask-form">
+      <textarea name="question" placeholder="Escribe tu pregunta..." required></textarea>
+      <button type="submit">➤</button>
+    </form>
+
+    <!-- Aviso si no hay PDF -->
+    {% if not pdf_ready %}
+      <p style="color: #ff4f6d; font-size:0.9rem; text-align:center;">
+        ⚠️ No hay PDFs cargados, las respuestas serán generales.
+      </p>
+    {% endif %}
+
+    <!-- Botón limpiar sesión -->
+    <form method="post" action="/clear">
+      <button type="submit" class="clear-button">Nueva sesión</button>
+    </form>
+
+    <!-- Subir PDFs -->
+    <form method="post" enctype="multipart/form-data" action="/upload" class="upload-form">
+      <label for="pdfs" id="file-label">Selecciona tus PDFs</label>
+      <input type="file" name="pdfs" id="pdfs" multiple accept=".pdf">
+      <button type="submit">Cargar</button>
+    </form>
+  </main>
+
+  <!-- Indicador de pensamiento -->
+  <div class="thinking hidden" id="thinking">
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+
+  <script>
+    // Aura y animación de "pensando"
+    function setThinking(state){
+      const aura = document.getElementById("aura");
+      const thinking = document.getElementById("thinking");
+      if(state){
+        aura.classList.add("active");
+        thinking.classList.remove("hidden");
+      } else {
+        aura.classList.remove("active");
+        thinking.classList.add("hidden");
+      }
+    }
+
+    // Activar aura cuando se envía pregunta
+    const askForm = document.getElementById('ask-form');
+    if(askForm){
+      askForm.addEventListener('submit', () => setThinking(true));
+    }
+
+    // Cambiar color del botón de carga si hay archivos seleccionados
+    const fileInput = document.getElementById('pdfs');
+    const fileLabel = document.getElementById('file-label');
+    fileInput.addEventListener('change', () => {
+      if(fileInput.files.length > 0){
+        fileLabel.classList.add('files-selected');
+      } else {
+        fileLabel.classList.remove('files-selected');
+      }
+    });
+  </script>
+</body>
+</html>
+
