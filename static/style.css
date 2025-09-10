@@ -131,33 +131,6 @@ body {
     gap: 15px;
 }
 
-/* ===== Formulario de PDF (Más discreto) ===== */
-.upload-form {
-    display: flex;
-    justify-content: center;
-    border-bottom: 1px dashed #333;
-    padding-bottom: 10px;
-}
-
-.file-label {
-    background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
-    padding: 8px 16px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    font-weight: normal;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.file-label:hover {
-    color: #fff;
-    border-color: #00ffd5;
-    box-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
-}
-
 /* ===== Formulario de preguntas ===== */
 .ask-form {
     display: flex;

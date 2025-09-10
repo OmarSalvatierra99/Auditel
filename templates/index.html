@@ -26,18 +26,11 @@
                         </div>
                     {% endfor %}
                 {% else %}
-                    <p class="welcome-message">💬 Bienvenido a Auditel, carga un PDF o realiza tu primera pregunta.</p>
+                    <p class="welcome-message">💬 Bienvenido a Auditel, puedes realizar tu primera pregunta.</p>
                 {% endif %}
             </div>
 
             <div class="input-area">
-                <form id="upload-form" action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" class="upload-form">
-                    <label for="pdfs" class="file-label">
-                        <span id="file-label-text">📄 Seleccionar PDF</span>
-                    </label>
-                    <input type="file" id="pdfs" name="pdfs" accept="application/pdf" multiple hidden onchange="updateFileName(this)">
-                </form>
-
                 <form id="ask-form" action="{{ url_for('ask') }}" method="post" class="ask-form">
                     <select name="ente" required>
                         <option value="" disabled selected>Selecciona un ente</option>
