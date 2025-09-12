@@ -1,74 +1,90 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const chatBox = document.getElementById('chat-box');
-    const askForm = document.getElementById('ask-form');
-    const questionTextarea = document.querySelector('.ask-form textarea');
-    const sendButton = document.querySelector('.send-button');
+document.addEventListener("DOMContentLoaded", function() {
+    const askForm = document.getElementById("ask-form");
+    const chatBox = document.getElementById("chat-box");
+    const welcomeMessage = document.querySelector(".welcome-message");
 
-    // Función para renderizar Markdown de un mensaje
-    function renderMarkdown(element) {
-        const markdownText = element.textContent;
-        element.innerHTML = marked.parse(markdownText);
-    }
+    // Renderiza el contenido del historial cuando la página carga
+    document.querySelectorAll('.chat-message.bot[data-answer]').forEach(botMessageDiv => {
+        const rawAnswer = botMessageDiv.getAttribute('data-answer');
+        const rawLinks = botMessageDiv.getAttribute('data-links');
+        const fullMarkdown = rawAnswer + rawLinks;
+        botMessageDiv.innerHTML = marked.parse(fullMarkdown);
+    });
 
-    // Renderizar los mensajes existentes al cargar la página.
-    document.querySelectorAll('.chat-message.bot').forEach(renderMarkdown);
-
-    // Manejo del envío del formulario de la pregunta
-    askForm.addEventListener('submit', async (event) => {
+    askForm.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const question = questionTextarea.value.trim();
-        const ente = askForm.querySelector('select').value;
+        const formData = new FormData(askForm);
+        const question = formData.get("question");
+        const ente = formData.get("ente");
+        const auditoria = formData.get("auditoria"); // Obtiene el nuevo campo
 
-        if (question === '' || ente === '') {
+        if (!question || !ente || !auditoria) {
+            alert("Por favor, completa todos los campos.");
             return;
         }
 
-        // Agrega el mensaje del usuario a la caja de chat
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'chat-message user';
-        userMessageDiv.textContent = `👤 ${question}`;
+        // Muestra la pregunta del usuario al instante
+        const userMessageDiv = document.createElement("div");
+        userMessageDiv.className = "chat-message user";
+        userMessageDiv.innerHTML = `👤 ${question}`;
         chatBox.appendChild(userMessageDiv);
+
+        // Mensaje de carga mientras se espera la respuesta
+        const loadingMessageDiv = document.createElement("div");
+        loadingMessageDiv.className = "chat-message bot loading";
+        loadingMessageDiv.innerHTML = "💬 Cargando...";
+        chatBox.appendChild(loadingMessageDiv);
+
+        // Desplaza al final
         chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Esconde el mensaje de bienvenida
+        if (welcomeMessage) {
+            welcomeMessage.style.display = "none";
+        }
 
-        // Crea un mensaje de carga para el bot
-        const botMessageDiv = document.createElement('div');
-        botMessageDiv.className = 'chat-message bot';
-        botMessageDiv.textContent = '...';
-        chatBox.appendChild(botMessageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        // Deshabilita el formulario para evitar envíos múltiples
+        askForm.querySelector("textarea").disabled = true;
+        askForm.querySelector("button").disabled = true;
 
-        // Deshabilita el botón mientras se procesa la respuesta
-        sendButton.disabled = true;
-
-        try {
-            const formData = new FormData();
-            formData.append('question', question);
-            formData.append('ente', ente);
-
-            const response = await fetch('/ask', {
-                method: 'POST',
-                body: formData,
-            });
-
-            const data = await response.json();
-
-            // Actualiza el mensaje del bot con la respuesta real y procesa el Markdown
+        fetch("/ask", {
+            method: "POST",
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Elimina el mensaje de carga
+            chatBox.removeChild(loadingMessageDiv);
+            
+            const botMessageDiv = document.createElement("div");
+            botMessageDiv.className = "chat-message bot";
+            
             if (data.success) {
-                botMessageDiv.textContent = data.answer;
-                renderMarkdown(botMessageDiv);
+                // Combina la respuesta y los enlaces y renderiza el Markdown
+                const fullMarkdown = data.answer + data.links;
+                botMessageDiv.innerHTML = marked.parse(fullMarkdown);
             } else {
-                botMessageDiv.textContent = data.message;
+                botMessageDiv.innerHTML = `⚠️ Error: ${data.message}`;
             }
 
-        } catch (error) {
-            console.error('Error al enviar la pregunta:', error);
-            botMessageDiv.textContent = '⚠️ Hubo un error al obtener la respuesta.';
-        } finally {
-            // Habilita el botón y limpia el área de texto
-            sendButton.disabled = false;
-            questionTextarea.value = '';
+            chatBox.appendChild(botMessageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
-        }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            chatBox.removeChild(loadingMessageDiv);
+            const errorMessageDiv = document.createElement("div");
+            errorMessageDiv.className = "chat-message bot";
+            errorMessageDiv.innerHTML = "⚠️ Ocurrió un error en la comunicación con el servidor.";
+            chatBox.appendChild(errorMessageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .finally(() => {
+            // Habilita el formulario de nuevo y limpia el textarea
+            askForm.querySelector("textarea").disabled = false;
+            askForm.querySelector("button").disabled = false;
+            askForm.querySelector("textarea").value = "";
+        });
     });
 });

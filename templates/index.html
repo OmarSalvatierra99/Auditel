@@ -21,9 +21,8 @@
                 {% if chat_history %}
                     {% for chat in chat_history %}
                         <div class="chat-message user">👤 {{ chat.question }}</div>
-                        <div class="chat-message bot">
-                            {% autoescape false %}{{ chat.answer_html }}{% endautoescape %}
-                        </div>
+                        <div class="chat-message bot" data-answer="{{ chat.answer_raw }}" data-links="{{ chat.links_raw }}">
+                            </div>
                     {% endfor %}
                 {% else %}
                     <p class="welcome-message">💬 Bienvenido a Auditel, puedes realizar tu primera pregunta.</p>
@@ -32,6 +31,11 @@
 
             <div class="input-area">
                 <form id="ask-form" action="{{ url_for('ask') }}" method="post" class="ask-form">
+                    <select name="auditoria" required>
+                        <option value="" disabled selected>Selecciona una Auditoría</option>
+                        <option value="financiero">Financiera</option>
+                        <option value="obra">Obra Pública</option>
+                    </select>
                     <select name="ente" required>
                         <option value="" disabled selected>Selecciona un ente</option>
                         <option value="autonomo">Ente Autónomo</option>

@@ -1,8 +1,9 @@
 import os
-import urllib.parse
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+import json
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from dotenv import load_dotenv
 from openai import OpenAI
+from scripts.busqueda_web import buscar_en_periodico_tlaxcala, buscar_en_dof
 
 # Cargar variables de entorno
 load_dotenv()
@@ -18,28 +19,20 @@ def get_chat_history():
 def set_chat_history(history):
     session["chat_history"] = history
 
-# Wrapper OpenAI con manejo de errores humanos
+# Wrapper OpenAI con manejo de errores y formato JSON
 def preguntar_openai(messages):
     try:
         response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=messages,
+            response_format={ "type": "json_object" }
         )
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        data = json.loads(content)
+        return data
     except Exception as e:
         print(f"[ERROR OpenAI] {e}")
-        return "⚠️ El sistema se saturó o hubo un problema con OpenAI, por favor inténtelo más tarde."
-
-# Generar enlace al Periódico Oficial de Tlaxcala
-def generar_enlace_busqueda_periodico(query):
-    if not query.strip():
-        return None
-    palabras = [palabra for palabra in query.split() if len(palabra) > 2]
-    keywords = palabras[:5]
-    search_string = " ".join(keywords)
-    search_encoded = urllib.parse.quote_plus(search_string)
-    url = f"https://periodico.tlaxcala.gob.mx/index.php/buscar?texto={search_encoded}"
-    return url
+        return {"answer": "⚠️ El sistema experimentó un error. Por favor, inténtelo más tarde.", "keywords": ""}
 
 # Rutas
 @app.route("/", methods=["GET"])
@@ -51,45 +44,59 @@ def index():
 def ask():
     question = request.form.get("question")
     ente = request.form.get("ente")
+    auditoria = request.form.get("auditoria")
 
     if not question:
         return jsonify({"success": False, "message": "Por favor escribe una pregunta."})
     if not ente:
         return jsonify({"success": False, "message": "Selecciona un tipo de ente."})
+    if not auditoria:
+        return jsonify({"success": False, "message": "Selecciona un tipo de auditoría."})
 
     chat_history = get_chat_history()
 
-    # Prompts base según tipo de ente
     ente_context = {
-        "autonomo": "Eres un asistente experto en la legislación y documentación de entes autónomos en Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema.",
-        "paraestatal": "Eres un asistente experto en la legislación y documentación de entidades paraestatales en Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema.",
-        "centralizada": "Eres un asistente experto en la legislación y documentación de dependencias centralizadas en Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema.",
-        "desconcentrada": "Eres un asistente experto en la legislación y documentación de dependencias desconcentradas en Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema.",
-        "descentralizada": "Eres un asistente experto en la legislación y documentación de entidades descentralizadas en Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema."
+        "autonomo": f"Eres un asistente experto en legislación de entes autónomos en Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes para búsquedas oficiales. Devuelve un JSON con: 'answer' (respuesta completa) y 'keywords' (lista de palabras clave).",
+        "paraestatal": f"Eres un asistente experto en legislación de entidades paraestatales en Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes para búsquedas oficiales. Devuelve un JSON con: 'answer' (respuesta completa) y 'keywords' (lista de palabras clave).",
+        "centralizada": f"Eres un asistente experto en legislación de dependencias centralizadas en Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes para búsquedas oficiales. Devuelve un JSON con: 'answer' (respuesta completa) y 'keywords' (lista de palabras clave).",
+        "desconcentrada": f"Eres un asistente experto en legislación de dependencias desconcentradas en Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes para búsquedas oficiales. Devuelve un JSON con: 'answer' (respuesta completa) y 'keywords' (lista de palabras clave).",
+        "descentralizada": f"Eres un asistente experto en legislación de entidades descentralizadas en Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes para búsquedas oficiales. Devuelve un JSON con: 'answer' (respuesta completa) y 'keywords' (lista de palabras clave)."
     }
 
-    # Mejorar el prompt para que el modelo responda con su base de conocimiento
-    system_prompt = ente_context.get(ente, "Eres un asistente experto en la legislación y documentación de Tlaxcala. Responde a la pregunta del usuario con base en tu conocimiento general de este tema.")
+    system_prompt = ente_context.get(ente, f"Eres un asistente experto en legislación de Tlaxcala, con especialización en auditoría {auditoria}. Responde de manera argumentada y extrae palabras clave relevantes. Devuelve un JSON con: 'answer' (respuesta) y 'keywords' (lista de palabras clave).")
 
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"Pregunta: {question}"}
     ]
 
-    answer = preguntar_openai(messages)
-
-    # Agregar hipervínculo al Periódico Oficial de Tlaxcala
-    enlace_busqueda = generar_enlace_busqueda_periodico(question)
-    if enlace_busqueda:
-        answer += f'\n\n🔗 [Ver documentos relacionados en el Periódico Oficial de Tlaxcala]({enlace_busqueda})'
+    data = preguntar_openai(messages)
+    answer = data.get("answer", "No se pudo generar una respuesta.")
+    keywords = data.get("keywords", question)
 
     if answer.startswith("⚠️"):
         return jsonify({"success": False, "message": answer})
 
-    chat_history.append({"question": question, "answer_html": answer})
+    # Convertir keywords a string si es una lista
+    if isinstance(keywords, list):
+        keywords_str = " ".join(keywords)
+    else:
+        keywords_str = keywords
+
+    # Búsquedas web con palabras clave
+    enlace_tlaxcala = buscar_en_periodico_tlaxcala(keywords_str)
+    enlace_dof = buscar_en_dof(keywords_str)
+
+    # El back-end solo envía los enlaces, la renderización se hace en el front-end
+    links_markdown = f'\n\n🔗 [Documentos en el Periódico Oficial de Tlaxcala]({enlace_tlaxcala})'
+    links_markdown += f'\n🔗 [Documentos en el Diario Oficial de la Federación]({enlace_dof})'
+    
+    # Se guarda el texto original sin procesar en el historial
+    chat_history.append({"question": question, "answer_raw": answer, "links_raw": links_markdown})
     set_chat_history(chat_history)
 
-    return jsonify({"success": True, "answer": answer})
+    # Se envía el texto original y los enlaces para que el front-end los combine
+    return jsonify({"success": True, "answer": answer, "links": links_markdown})
 
 @app.route("/clear", methods=["POST"])
 def clear():
