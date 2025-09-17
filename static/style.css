@@ -1,27 +1,29 @@
 /* ===== Estilos generales ===== */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #0d0d0d;
-    color: #eaeaea;
+    background: linear-gradient(135deg, #0d0d0d 0%, #0a0a0a 100%);
+    color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 .main-container {
     width: 90%;
     max-width: 950px;
     height: 95vh;
-    background: #1a1a1a;
-    border-radius: 16px;
+    background: rgba(26, 26, 26, 0.85); /* Fondo semitransparente */
+    backdrop-filter: blur(15px); /* Efecto de desenfoque */
+    border-radius: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.08);
+    box-shadow: 0 0 40px rgba(0, 255, 255, 0.15);
     overflow: hidden;
     position: relative;
-    padding: 20px;
+    padding: 25px;
 }
 
 /* Contenedor superior con botón de Nueva Sesión */
@@ -29,24 +31,27 @@ body {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .clear-button {
-    background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
-    padding: 8px 16px;
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #999;
+    padding: 10px 20px;
+    border-radius: 25px;
     cursor: pointer;
     font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
     transition: all 0.3s ease;
 }
 
 .clear-button:hover {
     color: #fff;
     border-color: #00ffd5;
-    box-shadow: 0 0 10px rgba(0, 255, 213, 0.4);
+    background: rgba(0, 255, 213, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 213, 0.5);
 }
 
 /* ===== Caja de chat ===== */
@@ -63,69 +68,79 @@ body {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
     scrollbar-width: thin;
-    scrollbar-color: #333 #111;
+    scrollbar-color: #444 #1a1a1a;
 }
 
 .chat-box::-webkit-scrollbar {
     width: 8px;
 }
 .chat-box::-webkit-scrollbar-thumb {
-    background: #333;
+    background: #444;
     border-radius: 4px;
 }
 .chat-box::-webkit-scrollbar-track {
-    background: #111;
+    background: #1a1a1a;
 }
 
 .welcome-message {
     color: #666;
     text-align: center;
     padding-top: 50px;
+    font-style: italic;
+    font-weight: 300;
 }
 
 .chat-message {
-    padding: 12px 16px;
-    border-radius: 12px;
-    max-width: 80%;
-    line-height: 1.6;
+    padding: 15px 20px;
+    border-radius: 18px;
+    max-width: 85%;
+    line-height: 1.7;
     word-wrap: break-word;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .chat-message.user {
-    background: #222;
+    background: #252525;
     align-self: flex-end;
-    border: 1px solid #444;
+    border: 1px solid #333;
+    color: #fff;
 }
 
 .chat-message.bot {
-    background: #101010;
-    border: 1px solid #333;
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.08);
+    background: #121212;
+    border: 1px solid #222;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.1);
     align-self: flex-start;
+    color: #e0e0e0;
 }
 
 /* Estilos para el contenido Markdown */
 .chat-message.bot p { margin: 0; }
+.chat-message.bot h1, .chat-message.bot h2, .chat-message.bot h3 { color: #00ffd5; margin-top: 15px; margin-bottom: 5px; }
 .chat-message.bot ul, .chat-message.bot ol {
     margin-top: 10px;
     padding-left: 20px;
+    list-style-type: '— ';
 }
 .chat-message.bot a {
     color: #00ffd5;
     text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 .chat-message.bot a:hover {
+    color: #00e6b3;
     text-decoration: underline;
 }
 
 /* ===== Área de input ===== */
 .input-area {
     border-top: 1px solid #222;
-    background: #141414;
-    padding: 10px 20px;
+    background: rgba(20, 20, 20, 0.9);
+    padding: 15px 25px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -134,7 +149,7 @@ body {
 /* ===== Formulario de preguntas ===== */
 .ask-form {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     align-items: center;
     padding: 0;
 }
@@ -143,43 +158,49 @@ body {
     background: #1e1e1e;
     color: #eee;
     border: 1px solid #333;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 0.9rem;
-    flex: 0.6;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 0.95rem;
+    flex: 0.8;
+    appearance: none; /* Elimina la flecha predeterminada */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ccc' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
     transition: border 0.3s ease;
 }
 
 .ask-form select:focus {
-    border-color: #0ff;
+    border-color: #00ffd5;
     outline: none;
+    box-shadow: 0 0 8px rgba(0, 255, 213, 0.3);
 }
 
 .ask-form textarea {
     flex: 2;
     background: #1e1e1e;
     border: 1px solid #333;
-    border-radius: 10px;
+    border-radius: 12px;
     color: #eee;
-    padding: 12px;
+    padding: 15px;
     resize: none;
     height: 50px;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     transition: border 0.3s ease;
 }
 
 .ask-form textarea:focus {
     border-color: #00ffa2;
     outline: none;
+    box-shadow: 0 0 8px rgba(0, 255, 162, 0.3);
 }
 
 .send-button {
-    background: #0ff;
+    background: #00e6b3;
     border: none;
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
-    font-size: 1.2rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
     cursor: pointer;
     color: #000;
     display: flex;
@@ -190,5 +211,28 @@ body {
 
 .send-button:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 230, 179, 0.6);
+}
+
+/* ===== Estilos para la leyenda (Disclaimer) ===== */
+.disclaimer {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #777;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    border-radius: 10px;
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    font-style: italic;
+}
+
+.disclaimer p {
+    margin: 0;
 }

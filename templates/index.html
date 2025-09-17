@@ -22,7 +22,7 @@
                     {% for chat in chat_history %}
                         <div class="chat-message user">👤 {{ chat.question }}</div>
                         <div class="chat-message bot" data-answer="{{ chat.answer_raw }}" data-links="{{ chat.links_raw }}">
-                            </div>
+                        </div>
                     {% endfor %}
                 {% else %}
                     <p class="welcome-message">💬 Bienvenido a Auditel, puedes realizar tu primera pregunta.</p>
@@ -37,17 +37,19 @@
                         <option value="obra">Obra Pública</option>
                     </select>
                     <select name="ente" required>
-                        <option value="" disabled selected>Selecciona un ente</option>
+                        <option value="" disabled selected>Selecciona un tipo de ente</option>
                         <option value="autonomo">Ente Autónomo</option>
-                        <option value="paraestatal">Paraestatal</option>
+                        <option value="paraestatal">Paraestatal / Descentralizada</option>
                         <option value="centralizada">Centralizada</option>
-                        <option value="desconcentrada">Desconcentrada</option>
-                        <option value="descentralizada">Descentralizada</option>
                     </select>
                     <textarea name="question" placeholder="Escribe tu pregunta aquí..." required></textarea>
                     <button type="submit" class="send-button">➤</button>
                 </form>
             </div>
+        </div>
+        
+        <div class="disclaimer">
+            <p>La información mostrada no integra normativa interna, especifica, reglas de operación y convenios.</p>
         </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
