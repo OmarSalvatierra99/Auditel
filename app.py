@@ -18,6 +18,7 @@ DATA_DIR = "data"
 for filename in os.listdir(DATA_DIR):
     if filename.endswith(".json"):
         with open(os.path.join(DATA_DIR, filename), 'r', encoding='utf-8') as f:
+            # Normalizar el nombre del archivo para que coincida con las selecciones del frontend
             nombre_base = os.path.splitext(filename)[0].replace("_", " ").title()
             DB_AUDITORIA[nombre_base] = json.load(f)
 
@@ -39,11 +40,11 @@ def get_keywords(text):
 def filter_db(db, keywords):
     if not keywords:
         return []
-    
+
     # Filtra registros donde alguna palabra clave esté en 'tipo' o 'descripcion_irregularidad'
     filtered = [
         item for item in db
-        if any(keyword in item.get('tipo', '').lower() or 
+        if any(keyword in item.get('tipo', '').lower() or
                keyword in item.get('descripcion_irregularidad', '').lower()
                for keyword in keywords)
     ]
@@ -68,8 +69,8 @@ def preguntar_openai(messages):
 @app.route("/", methods=["GET"])
 def index():
     chat_history = get_chat_history()
-    tipos_auditoria = list(DB_AUDITORIA.keys())
-    return render_template("index.html", chat_history=chat_history, tipos_auditoria=tipos_auditoria)
+    # Pasa el historial de chat a la plantilla para que se renderice al cargar
+    return render_template("index.html", chat_history=chat_history)
 
 @app.route("/ask", methods=["POST"])
 def ask():
@@ -77,34 +78,33 @@ def ask():
     ente = request.form.get("ente")
     auditoria_tipo = request.form.get("auditoria")
 
-    if not question:
-        return jsonify({"success": False, "message": "Por favor escribe una pregunta."})
-    if not ente:
-        return jsonify({"success": False, "message": "Selecciona un tipo de ente."})
-    if not auditoria_tipo:
-        return jsonify({"success": False, "message": "Selecciona un tipo de auditoría."})
+    # Si la pregunta o el tipo de auditoría no existen, se devuelve un error
+    if not question or not auditoria_tipo:
+        return jsonify({"success": False, "message": "Por favor escribe una pregunta y selecciona un tipo de auditoría."})
 
     chat_history = get_chat_history()
-    
+
+    # Se busca la base de datos correcta basándose en el tipo de auditoría
     db_to_use = DB_AUDITORIA.get(auditoria_tipo, [])
-    
+
     # Extrae palabras clave de la pregunta
     keywords = get_keywords(question)
-    
+
     # Filtra la base de datos para enviar solo los registros relevantes
     filtered_db = filter_db(db_to_use, keywords)
-    
+
     db_string = json.dumps(filtered_db, indent=2, ensure_ascii=False)
 
+    # Se construye el prompt del sistema
     system_prompt = f"""
     Eres un asistente experto en legislación de Tlaxcala, especializado en auditoría {auditoria_tipo} para entes de tipo "{ente}".
     Tu tarea es **consultar la base de datos de conceptos proporcionada**, analizar la pregunta del usuario y generar una respuesta experta.
-    
+
     La base de datos tiene este formato:
     ```json
     {db_string}
     ```
-    
+
     Instrucciones:
     1.  Identifica los conceptos clave en la pregunta del usuario.
     2.  Busca en la base de datos los registros que coincidan con el tipo de ente y los conceptos clave.
@@ -113,14 +113,14 @@ def ask():
     5.  Tu respuesta debe ser un objeto JSON con dos claves:
         -   `answer`: La respuesta completa, clara y argumentada.
         -   `keywords`: Una lista de palabras clave extraídas de la pregunta y la normativa encontrada.
-    
+
     Ejemplo de respuesta:
     {{
         "answer": "De acuerdo con el registro encontrado, si un ente paraestatal descentralizado recibe recursos federales, está obligado a presentar informes trimestrales de rendición de cuentas, conforme al Capítulo V de las Reglas de Operación del Programa. Una observación importante para la auditoría es verificar que estos informes se presenten en tiempo y forma, y que los gastos estén alineados con los objetivos del programa.",
         "keywords": ["rendición de cuentas", "recursos federales", "informes trimestrales", "Reglas de Operación"]
     }}
     """
-    
+
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"Pregunta: {question}"}

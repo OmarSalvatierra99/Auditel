@@ -34,6 +34,11 @@ body {
     margin-bottom: 20px;
 }
 
+.clear-form {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .clear-button {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -136,6 +141,42 @@ body {
     text-decoration: underline;
 }
 
+/* ===== Estilos para el nuevo flujo de chat ===== */
+.selection-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.selection-buttons button {
+    background: rgba(0, 255, 213, 0.1);
+    border: 1px solid #00ffd5;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.selection-buttons button:hover {
+    background: #00ffd5;
+    color: #0d0d0d;
+    box-shadow: 0 0 15px rgba(0, 255, 213, 0.5);
+}
+
+.chat-message.bot.loading {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
 /* ===== Área de input ===== */
 .input-area {
     border-top: 1px solid #222;
@@ -148,7 +189,7 @@ body {
 
 /* ===== Formulario de preguntas ===== */
 .ask-form {
-    display: flex;
+    display: flex; /* Se controla con JavaScript */
     gap: 15px;
     align-items: center;
     padding: 0;
