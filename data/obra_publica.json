@@ -1,0 +1,149 @@
+[
+  {
+    "tipo": "Volumenes de obra pagados no ejecutados",
+    "descripcion_irregularidad": "Por contrato: Es el resultado de la diferencia entre las cantidades estimadas y las obtenidas fisicamente. Por Administración Directa: Insumos: Es el resultado de la diferencia entre las cantidades facturadas y las obtenidas fisicamente. Mano de Obra: Es el resultado de la diferencia entre el número de jornales amparado en la listas de raya y los calculados con base a los trabajos fisicamente ejecutados.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Simulación de documentación técnica justificativa, toda vez, que los trabajos no han sido ejecutado o se encuentra en proceso constructivo.",
+      "Se consideran en los números generadores medidas superiores a las físicamente ejecutadas.",
+      "Adquisición de insumos superiores a los utilizados para la ejecución de los trabajos.",
+      "Consideración de bajos rendimientos de las cuadrillas."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Orden de pago, Pólizas contables, Transferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, números generadores, Bitácora de obra, Reporte fotográfico, Acta entrega recepción.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cédula de cálculos realizados, Reporte fotográfico, Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 58, 59, 60 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 46 fracción XII, 53 y 55 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas. Artículo 131 del Reglamento de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Conceptos de obra pagados no ejecutados",
+    "descripcion_irregularidad": "Por contrato: Es el concepto de obra pagado no ejecutado a la fecha de la visita física. Por Administración Directa: Insumos y mano de obra: Es el insumo de obra facturado que no ha sido suministrado y ejecutado a la fecha de la visita física.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Se consideran en los números generadores conceptos no ejecutados a la fecha de la visita física.",
+      "Falta de suministro de insumos para la ejecución de los trabajos a la fecha de la visita física.",
+      "Trabajos no ejecutados a la fecha de la visita física."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Orden de pago, Pólizas contables, Transferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, números generadores, Bitácora de obra, Reporte fotográfico, Acta entrega recepción.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cédula de cálculos realizados, Reporte fotográfico, Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 58, 59, 60 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 46 fracción XII, 53 y 55 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas. Artículo 131 del Reglamento de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Pago de obras sin acreditar su existencia física",
+    "descripcion_irregularidad": "Por contrato / Administración Directa: Es la obra estimada no ejecutada o no ubicada en coordinación con personal adscrito al ente auditado a la fecha de la visita física.",
+    "accion_promovida": "Pliego de Observaciones (PO) / Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Simulación de documentación técnica justificativa, toda vez, que los trabajos no han sido ejecutado."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de la obra observada: Orden de pago, Pólizas contables, Transferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, números generadores, Bitácora de obra, Reporte fotográfico, Acta entrega recepción.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cedula de cálculos realizados, Reporte fotográfico, Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 58, 59, 60 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 46 fracción XII, 53 y 55 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas. Artículo 131 del Reglamento de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Procesos constructivos deficientes que causan afectaciones físicas en las obras",
+    "descripcion_irregularidad": "Por contrato / Administración Directa: Son los procesos constructuivos deficientes en las obras públicas que dan como resultado defectos, fallas y deterioros, originados por la utilización de insumos de mala calidad y/o mano de obra no calificada.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Falta o deficiente supervición de los proceos constructivos.",
+      "Utilización de insumos de mala calidad al no cumplir con las especificación tecnicas.",
+      "Ejecución de los procesos constructivos, sin apego a lo establecido en los proyectos ejecutivos de la obra.",
+      "Empleo de mano de obra no calificada."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Orden de pago, Pólizas contables, Transferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, números generadores, Bitácora de obra, Reporte fotográfico, Acta entrega recepción, Fianza de vicios ocultos.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cedula de cálculos realizados, Reporte fotográfico, Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 70, 71 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 66, 67 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Pago de conceptos de obra, insumos, bienes o servicios a precios superiores al de mercado",
+    "descripcion_irregularidad": "Por contrato: Es el resultado de la diferencia entre el precio unitario contratado y el analisis, cálculo e integración de los precios acorde con las condiciones de costos vigentes en la zona o region donde se ejecutaron los trabajos. Por Administración Directa: Es el resultado de la diferencia entre el precio facturado de insumos y/o pago de mano de obra respecto al analisis, cálculo e integración de los precios acorde con las condiciones de costos vigentes en la zona o region donde se ejecutaron los trabajos.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Costo de insumos por arriba de los costo de mercado.",
+      "Bajos rendiemientos de mano de obra.",
+      "Cantidad de insumos mayores a los necesarior por unidad de medida.",
+      "Bajos rendiemientos de hora maquina.",
+      "Porcentajes elevados de indirectos.",
+      "Duplicidad de actividades entre conceptos de obra.",
+      "Actividades incluidas en concepto no ejeutadas."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Orden de pago, Pólizas contables, Tranferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, Reporte fotográfico, Tarjetas de Precios Unitarios.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cedula de cálculos realizados, Reporte fotográfico, Acta de auditoria donde consten los hechos observados, Tarjeta de Precios Unitarios del OFS, Cotizaciones con racteristicas identicas, Tablas de rendimientos (maquinaria / cuadrillas)."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 1, 19 y 42 parrafo segúndo de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 21 fracción XIII y 31 fracción XV, de la Ley de Obras Públicas y Servicios Relacionados con la Mismas. Artículo 21 fracción V, 65 fracción II, 186 del Reglamento de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Obras y/o conceptos pagados no fiscalizados por ocultamiento de documentación comprobatoria de su ejecución",
+    "descripcion_irregularidad": "Por contrato / Administración Directa: Es la omisión de la integración de la documentación técnica justificativa de los trabajos pagados de la obra.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Falta de integración de la documentación tecnica justificativa.",
+      "Financiamiento total de las obras ejecutadas.",
+      "Simulación de proceos de adjudicación.",
+      "Obras ejecutadas al final de la administración"
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Pólizas contables, Facturas (CFDI).",
+      "Documentación integrada por el ente auditor: Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículo 42 de la Ley General de Contabilidad Gubernamental.",
+    "normatividad_local_contrato": "Artículo 42 de la Ley General de Contabilidad Gubernamental. Artículos 58, 59, 60, 78 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios. Artículo 302 del Código Financiero para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículo 42 de la Ley General de Contabilidad Gubernamental. Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 42 de la Ley General de Contabilidad Gubernamental. Artículo 46 fracción XII, 55 y 74 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Pago de obras sin acreditar propiedad del bien inmueble",
+    "descripcion_irregularidad": "Por contrato / Administración Directa: Recuros destinados al financimiento de obras o acciones que sin acreditan la propiedad del bien inmueble donde se ejecutaron los trabajos.",
+    "accion_promovida": "Pliego de Observaciones (PO) / Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Ejecución de obras o acciones sin contar con documentación legal que acredite la propiedad."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Pólizas contables, Facturas, Contrato y convenio modificatorio, Acta entrega recepción del municipio a los beneficiarios.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Reporte fotográfico, Acta de auditoria donde consten los hechos observados."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 25, 27, 83, de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 25, 27, 83, de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículo 19, 52, 65, de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 19, 52, 65, de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  },
+  {
+    "tipo": "Concepto pagado que no cumple con especificaciones ténicas estimadas",
+    "descripcion_irregularidad": "Es el concepto de obra ejecutado, si embargo, no cumple con las especificciones técnicas descritas en el catalogo de conceptos contatado y estimado. Lo que resulta una inversión menor en la cantidad de material y en consecuencia no cumplir can la vida util de la obra de proyecto.",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Simulación de documentación técnica justificativa, toda vez, que los trabajos no han sido ejecutado cumpliendo especificaciones técnicas.",
+      "Dosificación menor de insumos que integran el concepto de obra.",
+      "Disminución de dimenciones en la ejecución del concepto."
+    ],
+    "documentacion_soporte": [
+      "Copia certificada de la cuenta pública del ente fiscalizado de los conceptos observados: Orden de pago, Pólizas contables, Transferencias, Presupuesto (catálogo de conceptos contratados), Contrato y convenio modificatorio, Facturas, estimaciones, números generadores, Bitácora de obra, Reporte fotográfico, Acta entrega recepción.",
+      "Documentación integrada por el ente auditor: Levantamiento físico (croquis y/o planos), Cédula de cálculos realizados, Reporte fotográfico, Pruebas de Laboratorio de obra."
+    ],
+    "normatividad_local_administracion_directa": "Artículos 10, 74, 75, 76, 77 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_local_contrato": "Artículos 58, 59, 60 de la Ley de Obras Públicas para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal_administracion_directa": "Artículos 70, 71, 72 y 73 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas.",
+    "normatividad_federal_contratacion": "Artículo 46 fracción XII, 53 y 55 de la Ley de Obras Públicas y Servicios Relacionados con la Mismas. Artículo 131 del Reglamento de la Ley de Obras Públicas y Servicios Relacionados con la Mismas."
+  }
+]
