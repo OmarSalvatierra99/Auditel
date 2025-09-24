@@ -1,0 +1,146 @@
+[
+  {
+    "tipo": "Manuales de org y proce Reglamento de control interno",
+    "descripcion_irregularidad": "Falta de manuales de organización y procedimientos o reglamento de control interno actualizado",
+    "accion_promovida": "Observación por incumplimiento normativo",
+    "acciones_irregularidad": [
+      "No contar con manuales de organización y procedimientos actualizados",
+      "Carecer de reglamento de control interno vigente",
+      "Incumplimiento en la implementación de controles internos"
+    ],
+    "documentacion_soporte": [
+      "Copia de manuales de organización y procedimientos",
+      "Reglamento de control interno",
+      "Acta de actualización de documentos normativos",
+      "Evidencia de implementación de controles"
+    ],
+    "normatividad_local": "Artículos 21, 27 párrafo segundo, 34 fracción XI, XIII y décimo séptimo transitorio de la Ley Orgánica de la Administración Pública del Estado de Tlaxcala, 3, 3, 9, 13 y 18 fracción IV de los Lineamientos Generales de Control Interno y sus Normas de Aplicación para la Administración Pública Estatal.",
+    "normatividad_federal": "Ley General de Contabilidad Gubernamental en materia de control interno"
+  },
+  {
+    "tipo": "No presentan pólizas",
+    "descripcion_irregularidad": "Omisión en la presentación de pólizas contables requeridas para la fiscalización",
+    "accion_promovida": "Observación por falta de documentación",
+    "acciones_irregularidad": [
+      "No presentar pólizas contables solicitadas",
+      "Documentación contable incompleta",
+      "Incumplimiento en la entrega de información fiscal"
+    ],
+    "documentacion_soporte": [
+      "Lista de pólizas requeridas",
+      "Oficios de solicitud de información",
+      "Acta de entrega-recepción de documentación",
+      "Constancia de incumplimiento"
+    ],
+    "normatividad_local": "Artículos 15 y 18 de la Ley de Fiscalización Superior y Rendición de Cuentas del Estado de Tlaxcala y sus Municipios, 302 del Código Financiero para el Estado de Tlaxcala, 93 fracción VIII y 107 fracción VI del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2024, 20 fracción XIII del Acuerdo que Establece los Lineamientos y Políticas Generales del Ejercicio del Presupuesto.",
+    "normatividad_federal": "Ley General de Contabilidad Gubernamental en materia de documentación comprobatoria"
+  },
+  {
+    "tipo": "Saldos Contrarios a su naturaleza",
+    "descripcion_irregularidad": "Existencia de saldos contables que no corresponden a la naturaleza de las cuentas",
+    "accion_promovida": "Observación contable",
+    "acciones_irregularidad": [
+      "Saldos en cuentas que no corresponden a su naturaleza contable",
+      "Registros contables inconsistentes",
+      "Incumplimiento de postulados básicos de contabilidad gubernamental"
+    ],
+    "documentacion_soporte": [
+      "Estado de situación financiera",
+      "Balances de comprobación",
+      "Catálogo de cuentas",
+      "Notas a los estados financieros"
+    ],
+    "normatividad_local": "Artículos 2, 16, 17, 19 fracciones II y V, 33, 34, 37 y 44 de la Ley General de Contabilidad Gubernamental, 302 del Código Financiero para el Estado de Tlaxcala y sus Municipios, 1 párrafos sexto, séptimo y 152 del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2025.",
+    "normatividad_federal": "Postulados Básicos de Contabilidad Gubernamental de 'Revelación Suficiente' e 'Importancia Relativa'"
+  },
+  {
+    "tipo": "Cuentas por cobrar pendientes",
+    "descripcion_irregularidad": "Cuentas por cobrar pendientes de gestión y recuperación",
+    "accion_promovida": "Observación por gestión de cobranza",
+    "acciones_irregularidad": [
+      "Falta de gestión activa de cuentas por cobrar",
+      "Plazos vencidos sin acción de cobro",
+      "Incumplimiento en políticas de recuperación"
+    ],
+    "documentacion_soporte": [
+      "Estado de cuentas por cobrar",
+      "Gestión de cobranza documentada",
+      "Políticas de crédito y cobranza",
+      "Edades de saldos pendientes"
+    ],
+    "normatividad_local": "Artículos 43 de la Ley General de Contabilidad Gubernamental, 302 del Código Financiero para el Estado de Tlaxcala y sus Municipios, 152 del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2025 y 8 del Acuerdo que establece los Lineamientos y Políticas Generales del Ejercicio del Presupuesto.",
+    "normatividad_federal": "Ley General de Contabilidad Gubernamental en materia de activos"
+  },
+  {
+    "tipo": "Ingresos no registrados",
+    "descripcion_irregularidad": "Ingresos percibidos que no fueron registrados contablemente",
+    "accion_promovida": "Probable Daño Patrimonial (PDP)",
+    "acciones_irregularidad": [
+      "Omisión en el registro de ingresos percibidos",
+      "Falta de integración presupuestaria",
+      "Incumplimiento de principios contables"
+    ],
+    "documentacion_soporte": [
+      "Estados bancarios",
+      "Comprobantes de ingresos",
+      "Conciliaciones bancarias",
+      "Reportes de tesorería"
+    ],
+    "normatividad_local": "Artículos 134 párrafo primero de la Constitución Política de los Estados Unidos Mexicanos, 16, 17, 18, 19, 21, 22, 33, 34, 35, 36, 37, 38, 40, 41, y 44 de la Ley General de Contabilidad Gubernamental, 13 fracción IV de la Ley de Disciplina Financiera de las Entidades Federativas y los Municipios, 302, 305 y 309 del Código Financiero para el Estado de Tlaxcala y sus Municipios.",
+    "normatividad_federal": "Postulados Básicos de Contabilidad Gubernamental: 'Revelación suficiente', 'Importancia relativa' y 'Registro e integración presupuestaria'"
+  },
+  {
+    "tipo": "Ministración mayor federal",
+    "descripcion_irregularidad": "Recepción de ministraciones federales superiores a lo programado",
+    "accion_promovida": "Observación por conciliación de recursos",
+    "acciones_irregularidad": [
+      "Diferencias entre ministración recibida y programada",
+      "Falta de conciliación con recursos federales",
+      "Incumplimiento en el reporte de recursos federales"
+    ],
+    "documentacion_soporte": [
+      "Acuerdo de distribución y calendarización de recursos federales",
+      "Estados de cuenta de recursos federales",
+      "Conciliaciones con TESOFE",
+      "Reportes de ejercicio de recursos federales"
+    ],
+    "normatividad_local": "Artículos 292 del Código Financiero para el Estado de Tlaxcala y sus Municipios, Acuerdo por el que se da a conocer a los gobiernos de las entidades federativas la distribución y calendarización para la ministración durante el Ejercicio Fiscal 2024, 1 párrafos segundo, quinto y sexto, 13 y 150 del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2024.",
+    "normatividad_federal": "Ley de Coordinación Fiscal y disposiciones de recursos federales"
+  },
+  {
+    "tipo": "Inasistencias del personal",
+    "descripcion_irregularidad": "Inasistencias del personal no justificadas o no registradas adecuadamente",
+    "accion_promovida": "Observación por control de personal",
+    "acciones_irregularidad": [
+      "Falta de registro de inasistencias",
+      "Inasistencias no justificadas",
+      "Incumplimiento de controles de asistencia"
+    ],
+    "documentacion_soporte": [
+      "Registros de asistencia",
+      "Control de incidencias de personal",
+      "Justificantes de inasistencias",
+      "Reportes de nómina"
+    ],
+    "normatividad_local": "Artículos 134 párrafo primero de la Constitución Política de los Estados Unidos Mexicanos, 48 fracción V y 25 fracción III de la Ley Laboral de los Servidores Públicos del Estado de Tlaxcala y sus Municipios, 302 del Código Financiero para el Estado de Tlaxcala y sus Municipios, 1 párrafos segundo, quinto y sexto, 49, 54 fracción I y 150 del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2024.",
+    "normatividad_federal": "Lineamientos para el Control, Registro y Aplicación de Incidencias de Personal"
+  },
+  {
+    "tipo": "Personal que no realiza controles de asistencia",
+    "descripcion_irregularidad": "Personal que no cumple con los controles de asistencia establecidos",
+    "accion_promovida": "Observación por control administrativo",
+    "acciones_irregularidad": [
+      "Falta de registro de asistencia",
+      "Incumplimiento de controles biométricos",
+      "Omisión en el reporte de incidencias"
+    ],
+    "documentacion_soporte": [
+      "Registros de control de asistencia",
+      "Reportes de incidencias",
+      "Políticas de control de personal",
+      "Evidencia de cumplimiento de controles"
+    ],
+    "normatividad_local": "Artículos 48 fracción V y 25 fracción III de la Ley Laboral de los Servidores Públicos del Estado de Tlaxcala y sus Municipios, 302 del Código Financiero para el Estado de Tlaxcala y sus Municipios, 1 párrafos segundo, quinto y sexto, 49, 54 fracción I y 150 del Presupuesto de Egresos del Estado de Tlaxcala para el Ejercicio Fiscal 2023.",
+    "normatividad_federal": "Disposiciones Generales y Lineamientos para el Control, Registro y Aplicación de Incidencias de Personal"
+  }
+]

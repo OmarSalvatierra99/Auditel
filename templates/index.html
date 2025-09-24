@@ -3,55 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditel - Chat Inteligente</title>
+    <title>Auditel - Asistente Inteligente de Auditoría</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="main-container">
-
-        <div class="top-bar">
-            <form action="{{ url_for('clear') }}" method="post" class="clear-form">
-                <button type="submit" class="clear-button">✦ Nueva sesión</button>
-            </form>
-        </div>
-
-        <div class="chat-container">
-            <div class="chat-box" id="chat-box">
-                {% if chat_history %}
-                    {% for chat in chat_history %}
-                        <div class="chat-message user">👤 {{ chat.question }}</div>
-                        <div class="chat-message bot" data-answer="{{ chat.answer_raw }}" data-links="{{ chat.links_raw }}">
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p class="welcome-message">💬 Bienvenido a Auditel, puedes realizar tu primera pregunta.</p>
-                {% endif %}
-            </div>
-
-            <div class="input-area">
-                <form id="ask-form" action="{{ url_for('ask') }}" method="post" class="ask-form">
-                    <select name="auditoria" required>
-                        <option value="" disabled selected>Selecciona una Auditoría</option>
-                        <option value="financiero">Financiera</option>
-                        <option value="obra">Obra Pública</option>
-                    </select>
-                    <select name="ente" required>
-                        <option value="" disabled selected>Selecciona un tipo de ente</option>
-                        <option value="autonomo">Ente Autónomo</option>
-                        <option value="paraestatal">Paraestatal / Descentralizada</option>
-                        <option value="centralizada">Centralizada</option>
-                    </select>
-                    <textarea name="question" placeholder="Escribe tu pregunta aquí..." required></textarea>
-                    <button type="submit" class="send-button">➤</button>
-                </form>
-            </div>
+        <!-- Barra lateral de botones -->
+        <div class="sidebar">
+            <button class="sidebar-button active">🔍 Consultas técnicas</button>
+            <button class="sidebar-button">⚖️ Análisis normativo</button>
+            <button class="sidebar-button">📋 Sugerencias de auditoría</button>
+            <button class="sidebar-button">📄 Documentación requerida</button>
+            <button class="sidebar-button">📊 Casos de estudio</button>
+            <button class="sidebar-button">🔧 Herramientas de auditoría</button>
         </div>
         
-        <div class="disclaimer">
-            <p>La información mostrada no integra normativa interna, especifica, reglas de operación y convenios.</p>
+        <!-- Área de contenido principal -->
+        <div class="content-area">
+            <div class="top-bar">
+                <h1>🔍 Auditel - Asistente IA</h1>
+                <form action="{{ url_for('clear') }}" method="post" class="clear-form">
+                    <button type="submit" class="clear-button">🔄 Nueva sesión</button>
+                </form>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-box" id="chat-box">
+                    <!-- Disclaimer integrado en el chat -->
+                    <div class="disclaimer-message">
+                        <p><span class="warning-icon">⚠️</span> La información mostrada es generada por IA y debe ser verificada. No integra normativa interna específica, reglas de operación y convenios.</p>
+                    </div>
+
+                    {% if chat_history %}
+                        {% for chat in chat_history %}
+                            <div class="chat-message user">
+                                <div class="message-header">👤 Tú</div>
+                                <div class="message-content">{{ chat.question }}</div>
+                            </div>
+                            <div class="chat-message bot">
+                                <div class="message-header">🔍 Auditel</div>
+                                <div class="message-content">
+                                    {{ chat.answer|safe }}
+                                </div>
+                                {% if chat.auditoria and chat.irregularidad %}
+                                <div class="message-context">
+                                    <small>Contexto: {{ chat.auditoria }} • {{ chat.irregularidad }}{% if chat.ente %} • {{ chat.ente }}{% endif %}</small>
+                                </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="welcome-message">
+                            <h3>💬 Bienvenido a Auditel</h3>
+                            <p>Tu asistente inteligente especializado en auditoría</p>
+                            <div class="welcome-features">
+                                <div class="feature">🔍 Consultas técnicas específicas</div>
+                                <div class="feature">⚖️ Análisis normativo</div>
+                                <div class="feature">📋 Sugerencias de auditoría</div>
+                                <div class="feature">📄 Documentación requerida</div>
+                                <div class="feature">📊 Casos prácticos</div>
+                                <div class="feature">🔧 Herramientas especializadas</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="suggestions-area" id="suggestions-area" style="display: none;">
+                    <div class="suggestions-header">
+                        <span>💡 Preguntas sugeridas:</span>
+                        <button id="refresh-suggestions" class="refresh-btn">🔄</button>
+                    </div>
+                    <div class="suggestions-container" id="suggestions-container"></div>
+                </div>
+
+                <div class="input-area">
+                    <form id="ask-form" action="{{ url_for('ask') }}" method="post" class="ask-form">
+                        <select name="auditoria" required style="display: none;"></select>
+                        <div class="input-wrapper">
+                            <textarea name="question" placeholder="Escribe tu pregunta técnica de auditoría aquí..." required></textarea>
+                            <button type="submit" class="send-button">➤</button>
+                        </div>
+                        <div class="ai-indicator">
+                            <span class="ai-badge">🤖 IA</span>
+                            <span>Respuestas generadas por inteligencia artificial</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    
+    <!-- Script para funcionalidad de la barra lateral -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Funcionalidad de los botones de la barra lateral
+            const sidebarButtons = document.querySelectorAll('.sidebar-button');
+            
+            sidebarButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remover clase active de todos los botones
+                    sidebarButtons.forEach(btn => btn.classList.remove('active'));
+                    // Agregar clase active al botón clickeado
+                    this.classList.add('active');
+                    
+                    // Aquí puedes agregar la lógica específica para cada botón
+                    const buttonText = this.textContent;
+                    console.log('Botón clickeado:', buttonText);
+                    
+                    // Ejemplo: Insertar texto sugerido en el textarea
+                    const textarea = document.querySelector('textarea[name="question"]');
+                    if (textarea) {
+                        switch(buttonText.trim()) {
+                            case '🔍 Consultas técnicas':
+                                textarea.placeholder = 'Escribe tu consulta técnica de auditoría...';
+                                break;
+                            case '⚖️ Análisis normativo':
+                                textarea.placeholder = 'Consulta sobre normativa y regulaciones...';
+                                break;
+                            case '📋 Sugerencias de auditoría':
+                                textarea.placeholder = 'Solicita sugerencias para tu auditoría...';
+                                break;
+                            case '📄 Documentación requerida':
+                                textarea.placeholder = 'Pregunta sobre documentación necesaria...';
+                                break;
+                            case '📊 Casos de estudio':
+                                textarea.placeholder = 'Consulta casos de estudio relevantes...';
+                                break;
+                            case '🔧 Herramientas de auditoría':
+                                textarea.placeholder = 'Pregunta sobre herramientas y metodologías...';
+                                break;
+                        }
+                        textarea.focus();
+                    }
+                });
+            });
+            
+            // Scroll automático al final del chat
+            const chatBox = document.getElementById('chat-box');
+            if (chatBox) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+            
+            // Auto-expansión del textarea
+            const textarea = document.querySelector('textarea[name="question"]');
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

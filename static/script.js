@@ -2,160 +2,380 @@ document.addEventListener("DOMContentLoaded", function() {
     const askForm = document.getElementById("ask-form");
     const chatBox = document.getElementById("chat-box");
     const welcomeMessage = document.querySelector(".welcome-message");
-    const auditoriaSelect = askForm.querySelector('select[name="auditoria"]');
-    const enteSelect = askForm.querySelector('select[name="ente"]');
+    const suggestionsArea = document.getElementById("suggestions-area");
+    const suggestionsContainer = document.getElementById("suggestions-container");
+    const refreshSuggestionsBtn = document.getElementById("refresh-suggestions");
+
     const questionTextarea = askForm.querySelector('textarea[name="question"]');
     const sendButton = askForm.querySelector('.send-button');
 
-    // Deshabilita el formulario por defecto para controlar la interacción
-    auditoriaSelect.style.display = 'none';
-    enteSelect.style.display = 'none';
-    questionTextarea.style.display = 'none';
-    sendButton.style.display = 'none';
+    // Campos ocultos SOLO para auditoría y ente (NO para irregularidad)
+    const auditoriaInput = document.createElement("input");
+    auditoriaInput.type = "hidden";
+    auditoriaInput.name = "auditoria";
+    askForm.appendChild(auditoriaInput);
 
-    // Función para mostrar un mensaje del bot en una burbuja
+    const enteInput = document.createElement("input");
+    enteInput.type = "hidden";
+    enteInput.name = "ente";
+    askForm.appendChild(enteInput);
+
+    // Estado de la conversación
+    const conversationState = {
+        auditoria: null,
+        ente: null,
+        configuracionCompleta: false
+    };
+
+    // Inicializar elementos del formulario
+    function inicializarFormulario() {
+        questionTextarea.style.display = 'none';
+        sendButton.style.display = 'none';
+        questionTextarea.disabled = true;
+        sendButton.disabled = true;
+        questionTextarea.value = '';
+        suggestionsArea.style.display = 'none';
+    }
+
+    inicializarFormulario();
+
     function showBotMessage(messageHtml) {
         const botMessageDiv = document.createElement("div");
         botMessageDiv.className = "chat-message bot";
         botMessageDiv.innerHTML = messageHtml;
         chatBox.appendChild(botMessageDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
-        return botMessageDiv; // Devuelve el elemento por si se necesita manipular
+        return botMessageDiv;
     }
 
-    // Función para mostrar un mensaje de usuario en una burbuja
     function showUserMessage(messageText) {
         const userMessageDiv = document.createElement("div");
         userMessageDiv.className = "chat-message user";
-        userMessageDiv.innerHTML = `👤 ${messageText}`;
+        userMessageDiv.innerHTML = `
+            <div class="message-header">👤 Tú</div>
+            <div class="message-content">${escapeHtml(messageText)}</div>
+        `;
         chatBox.appendChild(userMessageDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // Función para crear botones de selección
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function createSelectionButtons(options, onSelectCallback) {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.className = 'selection-buttons';
+
         options.forEach(option => {
             const button = document.createElement('button');
+            button.type = 'button';
             button.textContent = option.text;
             button.setAttribute('data-value', option.value);
             button.addEventListener('click', () => {
+                buttonsContainer.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                });
                 onSelectCallback(option.value, option.text);
-                buttonsContainer.style.display = 'none'; // Oculta los botones al seleccionar
             });
             buttonsContainer.appendChild(button);
         });
+
         return buttonsContainer;
     }
 
-    // Lógica para el flujo de la conversación
-    function startConversation() {
-        if (welcomeMessage) {
-            welcomeMessage.style.display = "none";
+    function cargarSugerenciasPreguntas() {
+        if (!conversationState.auditoria) {
+            suggestionsArea.style.display = 'none';
+            return;
         }
 
-        const auditoriaPrompt = showBotMessage(`
-            <p>¡Hola! Soy Auditel, tu asistente experto en legislación de Tlaxcala. Para empezar, por favor, selecciona el tipo de auditoría.</p>
-        `);
-        const auditoriaButtons = createSelectionButtons(
-            [{ text: 'Obra Pública', value: 'Obra Pública' }, { text: 'Financiera', value: 'Financiera' }],
-            handleAuditoriaSelection
-        );
-        auditoriaPrompt.appendChild(auditoriaButtons);
+        const url = `/sugerir_preguntas?auditoria_tipo=${encodeURIComponent(conversationState.auditoria)}&ente_tipo=${encodeURIComponent(conversationState.ente || 'No especificado')}`;
+
+        suggestionsContainer.innerHTML = '<div class="loading-suggestions">💭 Generando sugerencias...</div>';
+        suggestionsArea.style.display = 'block';
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.preguntas && data.preguntas.length > 0) {
+                    suggestionsContainer.innerHTML = '';
+                    data.preguntas.forEach((pregunta, index) => {
+                        const suggestionBtn = document.createElement('button');
+                        suggestionBtn.type = 'button';
+                        suggestionBtn.className = 'suggestion-btn';
+                        suggestionBtn.innerHTML = `💡 ${escapeHtml(pregunta)}`;
+                        suggestionBtn.addEventListener('click', () => {
+                            questionTextarea.value = pregunta;
+                            questionTextarea.style.height = 'auto';
+                            questionTextarea.style.height = (questionTextarea.scrollHeight) + 'px';
+                            questionTextarea.focus();
+                        });
+                        suggestionsContainer.appendChild(suggestionBtn);
+                    });
+                } else {
+                    suggestionsContainer.innerHTML = '<div class="loading-suggestions">⚠️ No se pudieron generar sugerencias</div>';
+                }
+            })
+            .catch(error => {
+                console.error("Error cargando sugerencias:", error);
+                suggestionsContainer.innerHTML = '<div class="loading-suggestions">❌ Error al cargar sugerencias</div>';
+            });
     }
 
     function handleAuditoriaSelection(value, text) {
-        showUserMessage(text);
-        auditoriaSelect.value = value;
+        showUserMessage(`Tipo de auditoría: ${text}`);
+        conversationState.auditoria = value;
+        auditoriaInput.value = value;
+
         if (value === 'Financiera') {
+            // Para auditoría financiera, preguntar tipo de ente
             const entePrompt = showBotMessage(`
-                <p>Perfecto. Ahora, selecciona el tipo de ente.</p>
+                <div class="message-header">🔍 Auditel</div>
+                <div class="message-content">
+                    <p>💰 <strong>Auditoría Financiera seleccionada</strong></p>
+                    <p>Para brindarte respuestas más precisas, selecciona el tipo de ente:</p>
+                </div>
             `);
+            
             const enteButtons = createSelectionButtons(
                 [
-                    { text: 'Ente Autónomo', value: 'Autónomo' },
-                    { text: 'Paraestatal / Descentralizada', value: 'Paraestatal' },
-                    { text: 'Centralizada', value: 'Centralizada' }
+                    { text: '🏛️ Ente Autónomo', value: 'Autónomo' },
+                    { text: '🏢 Paraestatal/Descentralizada', value: 'Paraestatal' },
+                    { text: '📊 Centralizada', value: 'Centralizada' },
+                    { text: '❓ No especificar', value: 'No especificado' }
                 ],
                 handleEnteSelection
             );
             entePrompt.appendChild(enteButtons);
         } else {
-            // Si es Obra Pública, el ente no es relevante, se asigna un valor por defecto
-            enteSelect.value = 'Obra Pública';
+            // Para obra pública, ir directamente a preguntas
+            conversationState.ente = 'No aplica';
+            enteInput.value = 'No aplica';
             showQuestionForm();
         }
     }
 
     function handleEnteSelection(value, text) {
-        showUserMessage(text);
-        enteSelect.value = value;
+        showUserMessage(`Tipo de ente: ${text}`);
+        conversationState.ente = value;
+        enteInput.value = value;
         showQuestionForm();
     }
 
     function showQuestionForm() {
+        conversationState.configuracionCompleta = true;
+
         showBotMessage(`
-            <p>¡Excelente! Estoy listo para ayudarte. Por favor, escribe tu pregunta.</p>
+            <div class="message-header">🔍 Auditel</div>
+            <div class="message-content">
+                <p>✅ <strong>¡Configuración completada!</strong></p>
+                <p>Ahora puedo ayudarte con:</p>
+                <ul>
+                    <li>🔍 <strong>Detección automática</strong> de irregularidades</li>
+                    <li>⚖️ <strong>Normativa aplicable</strong> según tu caso</li>
+                    <li>📋 <strong>Recomendaciones técnicas</strong> específicas</li>
+                </ul>
+                <p>Contexto configurado:</p>
+                <ul>
+                    <li>🏛️ <strong>Auditoría:</strong> ${conversationState.auditoria}</li>
+                    ${conversationState.ente ? `<li>📋 <strong>Ente:</strong> ${conversationState.ente}</li>` : ''}
+                </ul>
+                <p>Escribe tu pregunta y detectaré automáticamente la irregularidad y normativa aplicable.</p>
+            </div>
         `);
+
+        // Mostrar elementos del formulario
         questionTextarea.style.display = 'block';
         sendButton.style.display = 'flex';
+        questionTextarea.disabled = false;
+        sendButton.disabled = false;
+        questionTextarea.style.height = '50px';
         questionTextarea.focus();
+
+        // Cargar sugerencias
+        setTimeout(cargarSugerenciasPreguntas, 500);
     }
 
-    // Maneja el envío del formulario con la pregunta
+    // Configurar auto-expansión del textarea
+    questionTextarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+
+    // Configurar envío con Enter (sin Shift)
+    questionTextarea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (conversationState.configuracionCompleta && this.value.trim()) {
+                askForm.dispatchEvent(new Event('submit'));
+            }
+        }
+    });
+
+    // Botón de refresh de sugerencias
+    if (refreshSuggestionsBtn) {
+        refreshSuggestionsBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            cargarSugerenciasPreguntas();
+        });
+    }
+
+    // Manejar envío del formulario
     askForm.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        const formData = new FormData(askForm);
-        const question = formData.get("question");
+        const question = questionTextarea.value.trim();
 
         if (!question) {
-            alert("Por favor, escribe una pregunta.");
+            showBotMessage(`
+                <div class="message-header">🔍 Auditel</div>
+                <div class="message-content">
+                    <p>⚠️ Por favor, escribe tu pregunta.</p>
+                </div>
+            `);
+            questionTextarea.focus();
             return;
         }
 
-        // Muestra la pregunta del usuario
+        if (!conversationState.configuracionCompleta) {
+            showBotMessage(`
+                <div class="message-header">🔍 Auditel</div>
+                <div class="message-content">
+                    <p>⚠️ Por favor, completa la configuración inicial primero.</p>
+                </div>
+            `);
+            return;
+        }
+
+        // Mostrar mensaje del usuario
         showUserMessage(question);
 
-        // Mensaje de carga
-        const loadingMessageDiv = showBotMessage("💬 Cargando...");
-        loadingMessageDiv.classList.add('loading');
+        // Mostrar estado de carga con información de detección
+        const loadingMessageDiv = showBotMessage(`
+            <div class="message-header">🔍 Auditel</div>
+            <div class="message-content">
+                <div class="loading-message">
+                    <p>🔍 <strong>Analizando tu consulta...</strong></p>
+                    <div class="loading-spinner"></div>
+                    <p><small>Detectando irregularidad y normativa aplicable en ${conversationState.auditoria}</small></p>
+                </div>
+            </div>
+        `);
 
-        // Deshabilita el formulario
+        // Deshabilitar formulario durante el envío
         questionTextarea.disabled = true;
         sendButton.disabled = true;
+        sendButton.innerHTML = '⏳';
+        suggestionsArea.style.display = 'none';
 
+        // Preparar datos del formulario - SOLO auditoría y ente
+        const formData = new FormData();
+        formData.append("question", question);
+        formData.append("auditoria", conversationState.auditoria);
+        formData.append("ente", conversationState.ente || "No especificado");
+
+        // Enviar solicitud
         fetch("/ask", {
             method: "POST",
             body: formData,
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
-            // Elimina el mensaje de carga
             loadingMessageDiv.remove();
 
             if (data.success) {
-                // Renderiza la respuesta del bot con Markdown
-                const botResponse = showBotMessage(marked.parse(data.answer));
+                // Renderizar respuesta de forma segura
+                let answerContent = data.answer;
+                if (typeof marked !== 'undefined') {
+                    answerContent = marked.parse(data.answer);
+                }
+
+                const irregularidadInfo = data.irregularidad_detectada && data.irregularidad_detectada !== 'No detectada' 
+                    ? `<div class="detection-badge">🔍 Irregularidad detectada: <strong>${data.irregularidad_detectada}</strong></div>`
+                    : '';
+
+                const botResponse = showBotMessage(`
+                    <div class="message-header">🔍 Auditel</div>
+                    <div class="message-content">${answerContent}</div>
+                    ${irregularidadInfo}
+                    <div class="message-context">
+                        <small>Contexto: ${conversationState.auditoria} • ${conversationState.ente || 'No aplica'} • Detección automática</small>
+                    </div>
+                `);
             } else {
-                showBotMessage(`⚠️ Error: ${data.message}`);
+                showBotMessage(`
+                    <div class="message-header">🔍 Auditel</div>
+                    <div class="message-content">
+                        <p>❌ Error: ${data.message || 'Error desconocido'}</p>
+                    </div>
+                `);
             }
         })
         .catch(error => {
             console.error("Error:", error);
             loadingMessageDiv.remove();
-            showBotMessage("⚠️ Ocurrió un error en la comunicación con el servidor.");
+            showBotMessage(`
+                <div class="message-header">🔍 Auditel</div>
+                <div class="message-content">
+                    <p>❌ Error de conexión: ${error.message}</p>
+                    <p>Por favor, verifica tu conexión e intenta nuevamente.</p>
+                </div>
+            `);
         })
         .finally(() => {
-            // Habilita el formulario y limpia el textarea
+            // Restablecer formulario
             questionTextarea.disabled = false;
             sendButton.disabled = false;
+            sendButton.innerHTML = '➤';
             questionTextarea.value = "";
+            questionTextarea.style.height = '50px';
+            questionTextarea.focus();
+
+            // Recargar sugerencias
+            if (conversationState.configuracionCompleta) {
+                setTimeout(cargarSugerenciasPreguntas, 1000);
+            }
+
             chatBox.scrollTop = chatBox.scrollHeight;
         });
     });
 
-    // Llama a la función que inicia el flujo
+    function startConversation() {
+        if (welcomeMessage) {
+            welcomeMessage.style.display = "none";
+        }
+
+        const disclaimer = document.querySelector('.disclaimer-message');
+        if (disclaimer) {
+            disclaimer.style.display = 'block';
+        }
+
+        const auditoriaPrompt = showBotMessage(`
+            <div class="message-header">🔍 Auditel</div>
+            <div class="message-content">
+                <p>👋 ¡Hola! Soy <strong>Auditel</strong>, tu asistente inteligente especializado en auditoría.</p>
+                <p>Para brindarte respuestas precisas con <strong>detección automática de irregularidades</strong>, por favor selecciona el tipo de auditoría:</p>
+            </div>
+        `);
+
+        const auditoriaButtons = createSelectionButtons(
+            [
+                { text: '🏗️ Obra Pública', value: 'Obra Pública' },
+                { text: '💰 Financiera', value: 'Financiera' }
+            ],
+            handleAuditoriaSelection
+        );
+        auditoriaPrompt.appendChild(auditoriaButtons);
+    }
+
+    // Iniciar conversación
     startConversation();
 });
