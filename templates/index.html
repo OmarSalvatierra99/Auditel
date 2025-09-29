@@ -3,157 +3,272 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auditel - Asistente Inteligente de Auditoría</title>
+    <title>Auditel - Análisis Normativo Inteligente de Auditoría</title>
+    <meta name="description" content="Sistema especializado en análisis normativo automático para auditorías">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="main-container">
-        <!-- Barra lateral de botones -->
+        <!-- Barra lateral mejorada -->
         <div class="sidebar">
-            <button class="sidebar-button active">🔍 Consultas técnicas</button>
-            <button class="sidebar-button">⚖️ Análisis normativo</button>
-            <button class="sidebar-button">📋 Sugerencias de auditoría</button>
-            <button class="sidebar-button">📄 Documentación requerida</button>
-            <button class="sidebar-button">📊 Casos de estudio</button>
-            <button class="sidebar-button">🔧 Herramientas de auditoría</button>
+            <div class="sidebar-header">
+                <h2>⚖️ Auditel</h2>
+                <p class="sidebar-subtitle">Asistente Normativo</p>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>🔍 Modos de Análisis</h3>
+                <button class="sidebar-button active" data-mode="normativo">
+                    <span class="button-icon">⚖️</span>
+                    <span class="button-text">Análisis normativo</span>
+                </button>
+                <button class="sidebar-button" data-mode="sugerencias" onclick="mostrarMensajeDesarrollo()">
+                    <span class="button-icon">📋</span>
+                    <span class="button-text">Sugerencias de auditoría</span>
+                    <span class="badge">Próximamente</span>
+                </button>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>📊 Bases de Datos</h3>
+                {% for auditoria, stats in estadisticas.items() %}
+                <div class="database-info">
+                    <div class="db-header">
+                        <span class="db-icon">
+                            {% if auditoria == 'Obra Pública' %}🏗️
+                            {% elif auditoria == 'Financiera' %}💰
+                            {% else %}📁{% endif %}
+                        </span>
+                        <span class="db-name">{{ auditoria }}</span>
+                    </div>
+                    <div class="db-stats">
+                        <span class="db-records">{{ stats.registros }} registros</span>
+                    </div>
+                    <div class="db-desc">{{ stats.descripcion }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <div class="status-indicator active"></div>
+                    <span>Sistema operativo</span>
+                </div>
+                <div class="version">v2.0.0</div>
+            </div>
         </div>
-        
-        <!-- Área de contenido principal -->
+
+        <!-- Área de contenido principal mejorada -->
         <div class="content-area">
             <div class="top-bar">
-                <h1>🔍 Auditel - Asistente IA</h1>
-                <form action="{{ url_for('clear') }}" method="post" class="clear-form">
-                    <button type="submit" class="clear-button">🔄 Nueva sesión</button>
-                </form>
+                <div class="top-bar-left">
+                    <h1>🔍 Auditel - Análisis Normativo Inteligente</h1>
+                    <p class="top-bar-subtitle">Sistema especializado en detección automática de normativas aplicables</p>
+                </div>
+                <div class="top-bar-right">
+                    <form action="{{ url_for('clear') }}" method="post" class="clear-form">
+                        <button type="submit" class="clear-button" title="Comenzar nueva sesión">
+                            <span class="button-icon">🔄</span>
+                            Nueva sesión
+                        </button>
+                    </form>
+                </div>
             </div>
 
             <div class="chat-container">
                 <div class="chat-box" id="chat-box">
                     <!-- Disclaimer integrado en el chat -->
                     <div class="disclaimer-message">
-                        <p><span class="warning-icon">⚠️</span> La información mostrada es generada por IA y debe ser verificada. No integra normativa interna específica, reglas de operación y convenios.</p>
+                        <p><span class="warning-icon">⚠️</span> <strong>Importante:</strong> La información mostrada es generada automáticamente y debe ser verificada. No integra normativa interna específica, reglas de operación y convenios.</p>
                     </div>
 
                     {% if chat_history %}
                         {% for chat in chat_history %}
                             <div class="chat-message user">
-                                <div class="message-header">👤 Tú</div>
+                                <div class="message-header">
+                                    <span class="message-avatar">👤</span>
+                                    <span class="message-sender">Tú</span>
+                                    <span class="message-time">{{ chat.timestamp|datetimeformat }}</span>
+                                </div>
                                 <div class="message-content">{{ chat.question }}</div>
                             </div>
                             <div class="chat-message bot">
-                                <div class="message-header">🔍 Auditel</div>
+                                <div class="message-header">
+                                    <span class="message-avatar">🔍</span>
+                                    <span class="message-sender">Auditel</span>
+                                    <span class="message-time">{{ chat.timestamp|datetimeformat }}</span>
+                                </div>
                                 <div class="message-content">
-                                    {{ chat.answer|safe }}
+                                    {{ chat.answer }}
                                 </div>
-                                {% if chat.auditoria and chat.irregularidad %}
                                 <div class="message-context">
-                                    <small>Contexto: {{ chat.auditoria }} • {{ chat.irregularidad }}{% if chat.ente %} • {{ chat.ente }}{% endif %}</small>
+                                    <small>Contexto: {{ chat.auditoria }}{% if chat.ente %} • {{ chat.ente }}{% endif %} • Normativas: {{ chat.normativas_encontradas }}</small>
                                 </div>
-                                {% endif %}
                             </div>
                         {% endfor %}
                     {% else %}
                         <div class="welcome-message">
-                            <h3>💬 Bienvenido a Auditel</h3>
-                            <p>Tu asistente inteligente especializado en auditoría</p>
+                            <div class="welcome-header">
+                                <h3>💬 Bienvenido a Auditel v2.0</h3>
+                                <p>Tu asistente especializado en análisis normativo inteligente de auditoría</p>
+                            </div>
                             <div class="welcome-features">
-                                <div class="feature">🔍 Consultas técnicas específicas</div>
-                                <div class="feature">⚖️ Análisis normativo</div>
-                                <div class="feature">📋 Sugerencias de auditoría</div>
-                                <div class="feature">📄 Documentación requerida</div>
-                                <div class="feature">📊 Casos prácticos</div>
-                                <div class="feature">🔧 Herramientas especializadas</div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">⚖️</div>
+                                    <div class="feature-text">
+                                        <strong>Análisis normativo automático</strong>
+                                        <span>Detección inteligente de regulaciones aplicables</span>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🔍</div>
+                                    <div class="feature-text">
+                                        <strong>Búsqueda semántica avanzada</strong>
+                                        <span>Motor de búsqueda por similitud conceptual</span>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📋</div>
+                                    <div class="feature-text">
+                                        <strong>Base de datos normativa</strong>
+                                        <span>Actualizada con legislación mexicana vigente</span>
+                                    </div>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🎯</div>
+                                    <div class="feature-text">
+                                        <strong>Detección de patrones</strong>
+                                        <span>Identificación automática de temas relevantes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="welcome-stats">
+                                <div class="stat">
+                                    <strong>{{ estadisticas.values()|sum(attribute='registros') }}</strong>
+                                    <span>Normativas indexadas</span>
+                                </div>
+                                <div class="stat">
+                                    <strong>{{ estadisticas|length }}</strong>
+                                    <span>Auditorías disponibles</span>
+                                </div>
+                                <div class="stat">
+                                    <strong>v2.0</strong>
+                                    <span>Motor mejorado</span>
+                                </div>
                             </div>
                         </div>
                     {% endif %}
                 </div>
 
-                <div class="suggestions-area" id="suggestions-area" style="display: none;">
-                    <div class="suggestions-header">
-                        <span>💡 Preguntas sugeridas:</span>
-                        <button id="refresh-suggestions" class="refresh-btn">🔄</button>
-                    </div>
-                    <div class="suggestions-container" id="suggestions-container"></div>
-                </div>
-
                 <div class="input-area">
                     <form id="ask-form" action="{{ url_for('ask') }}" method="post" class="ask-form">
-                        <select name="auditoria" required style="display: none;"></select>
                         <div class="input-wrapper">
-                            <textarea name="question" placeholder="Escribe tu pregunta técnica de auditoría aquí..." required></textarea>
-                            <button type="submit" class="send-button">➤</button>
+                            <textarea 
+                                name="question" 
+                                placeholder="Escribe tu consulta sobre normativas aplicables aquí... Ej: '¿Qué normativas aplican para licitaciones de obra pública?'" 
+                                required
+                                maxlength="2000"
+                                aria-label="Consulta sobre normativas"
+                            ></textarea>
+                            <button type="submit" class="send-button" aria-label="Enviar consulta">
+                                <span class="send-icon">➤</span>
+                            </button>
                         </div>
-                        <div class="ai-indicator">
-                            <span class="ai-badge">🤖 IA</span>
-                            <span>Respuestas generadas por inteligencia artificial</span>
+                        <div class="input-footer">
+                            <div class="ai-indicator">
+                                <span class="ai-badge">🤖 IA</span>
+                                <span>Análisis normativo inteligente • Búsqueda semántica</span>
+                            </div>
+                            <div class="input-hints">
+                                <span class="hint">💡 <strong>Consejos:</strong> Sé específico • Usa términos técnicos • Incluye contextos</span>
+                                <span class="hint">⌨️ <strong>Atajos:</strong> Enter para enviar • Shift+Enter para nueva línea</span>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Scripts mejorados -->
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    
-    <!-- Script para funcionalidad de la barra lateral -->
+
     <script>
+        // Configuración global mejorada
+        window.auditelConfig = {
+            version: '2.0.0',
+            maxQuestionLength: 2000,
+            supportedAuditorias: {{ auditorias_config|tojson }},
+            features: {
+                semanticSearch: true,
+                patternDetection: true,
+                realTimeValidation: true
+            }
+        };
+
+        function mostrarMensajeDesarrollo() {
+            const chatBox = document.getElementById('chat-box');
+            const mensaje = document.createElement('div');
+            mensaje.className = 'chat-message bot';
+            mensaje.innerHTML = `
+                <div class="message-header">
+                    <span class="message-avatar">🔍</span>
+                    <span class="message-sender">Auditel</span>
+                    <span class="message-time">${new Date().toLocaleTimeString()}</span>
+                </div>
+                <div class="message-content">
+                    <div class="feature-coming-soon">
+                        <p>🚧 <strong>Sugerencias de Auditoría - En Desarrollo</strong></p>
+                        <p>Esta funcionalidad estará disponible en la próxima actualización.</p>
+                        <div class="coming-features">
+                            <div class="feature-item">• Generación automática de programas de auditoría</div>
+                            <div class="feature-item">• Detección de riesgos específicos</div>
+                            <div class="feature-item">• Recomendaciones de procedimientos</div>
+                        </div>
+                        <p>Por ahora, puedes usar el <strong>Modo de Análisis Normativo</strong> para consultar regulaciones aplicables.</p>
+                    </div>
+                </div>
+            `;
+            chatBox.appendChild(mensaje);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        // Procesar markdown en mensajes existentes después de cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            // Funcionalidad de los botones de la barra lateral
-            const sidebarButtons = document.querySelectorAll('.sidebar-button');
-            
-            sidebarButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    // Remover clase active de todos los botones
-                    sidebarButtons.forEach(btn => btn.classList.remove('active'));
-                    // Agregar clase active al botón clickeado
-                    this.classList.add('active');
-                    
-                    // Aquí puedes agregar la lógica específica para cada botón
-                    const buttonText = this.textContent;
-                    console.log('Botón clickeado:', buttonText);
-                    
-                    // Ejemplo: Insertar texto sugerido en el textarea
-                    const textarea = document.querySelector('textarea[name="question"]');
-                    if (textarea) {
-                        switch(buttonText.trim()) {
-                            case '🔍 Consultas técnicas':
-                                textarea.placeholder = 'Escribe tu consulta técnica de auditoría...';
-                                break;
-                            case '⚖️ Análisis normativo':
-                                textarea.placeholder = 'Consulta sobre normativa y regulaciones...';
-                                break;
-                            case '📋 Sugerencias de auditoría':
-                                textarea.placeholder = 'Solicita sugerencias para tu auditoría...';
-                                break;
-                            case '📄 Documentación requerida':
-                                textarea.placeholder = 'Pregunta sobre documentación necesaria...';
-                                break;
-                            case '📊 Casos de estudio':
-                                textarea.placeholder = 'Consulta casos de estudio relevantes...';
-                                break;
-                            case '🔧 Herramientas de auditoría':
-                                textarea.placeholder = 'Pregunta sobre herramientas y metodologías...';
-                                break;
+            if (typeof marked !== 'undefined') {
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    sanitize: false,  // ✅ IMPORTANTE: Permitir HTML
+                    headerIds: true
+                });
+
+                // Procesar markdown en todos los mensajes existentes del historial
+                const messageContents = document.querySelectorAll('.message-content');
+                messageContents.forEach(element => {
+                    if (!element.classList.contains('processed')) {
+                        const originalContent = element.innerHTML;
+                        try {
+                            element.innerHTML = marked.parse(originalContent);
+                            element.classList.add('processed');
+                        } catch (error) {
+                            console.error('Error procesando markdown:', error);
+                            element.innerHTML = originalContent;
                         }
-                        textarea.focus();
                     }
                 });
-            });
-            
-            // Scroll automático al final del chat
-            const chatBox = document.getElementById('chat-box');
-            if (chatBox) {
-                chatBox.scrollTop = chatBox.scrollHeight;
             }
-            
-            // Auto-expansión del textarea
-            const textarea = document.querySelector('textarea[name="question"]');
-            if (textarea) {
-                textarea.addEventListener('input', function() {
-                    this.style.height = 'auto';
-                    this.style.height = (this.scrollHeight) + 'px';
-                });
+
+            // Mejorar accesibilidad
+            const mainContainer = document.querySelector('.main-container');
+            if (mainContainer) {
+                mainContainer.setAttribute('role', 'main');
+                mainContainer.setAttribute('aria-label', 'Sistema de análisis normativo Auditel');
             }
+
+            console.log('🔍 Auditel v2.0 inicializado correctamente');
+            console.log('📊 Configuración:', window.auditelConfig);
         });
     </script>
 </body>
