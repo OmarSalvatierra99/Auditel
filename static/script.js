@@ -1,4 +1,4 @@
-// static/script.js - VERSIÓN MEJORADA CON MARKDOWN Y BÚSQUEDA EN INTERNET
+// static/script.js - VERSIÓN CORREGIDA - RENDERIZADO HTML FIXED
 document.addEventListener("DOMContentLoaded", function() {
     // === CONFIGURACIÓN INICIAL ===
     const askForm = document.getElementById("ask-form");
@@ -26,25 +26,25 @@ document.addEventListener("DOMContentLoaded", function() {
 
         async ejecutarConReintento(operacion, descripcion) {
             let ultimoError;
-            
+
             for (let intento = 1; intento <= this.maxReintentos + 1; intento++) {
                 try {
                     if (intento > 1) {
                         console.log(`🔄 Reintento ${intento-1}/${this.maxReintentos} para: ${descripcion}`);
                         await this.delay(this.delayBase * Math.pow(2, intento - 2));
                     }
-                    
+
                     return await operacion();
                 } catch (error) {
                     ultimoError = error;
                     console.warn(`Intento ${intento} falló:`, error);
-                    
+
                     if (intento > this.maxReintentos) {
                         break;
                     }
                 }
             }
-            
+
             throw ultimoError;
         }
 
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const contador = document.querySelector('.character-counter');
         if (contador) {
             contador.textContent = `${longitud}/2000`;
-            
+
             if (longitud > 1800) {
                 contador.style.color = '#ff6b6b';
             } else if (longitud > 1500) {
@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         let contenidoHTML = messageHtml;
-        
+
         // ✅ CORRECCIÓN: Procesar Markdown solo si es necesario
         if (isMarkdown && typeof marked !== 'undefined') {
             try {
@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
+        // ✅ CORRECCIÓN CRÍTICA: Usar innerHTML directamente para el contenido
         botMessageDiv.innerHTML = `
             <div class="message-header">
                 <span class="message-avatar">🔍</span>
@@ -410,24 +411,24 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function validarContenidoTiempoReal(texto) {
         const errores = [];
-        
+
         if (texto.length < 3) {
             errores.push('La consulta es muy corta (mínimo 3 caracteres)');
         }
-        
+
         if (texto.length > 2000) {
             errores.push('La consulta es demasiado larga (máximo 2000 caracteres)');
         }
-        
+
         // Detectar preguntas demasiado genéricas
         const palabras = texto.toLowerCase().split(/\s+/);
         const palabrasGenericas = ['qué', 'como', 'cuando', 'donde', 'quien', 'cuales', 'que', 'como'];
         const palabrasGenericasCount = palabras.filter(p => palabrasGenericas.includes(p)).length;
-        
+
         if (palabrasGenericasCount > 2 && palabras.length < 10) {
             errores.push('Consulta muy genérica. Sé más específico para mejores resultados.');
         }
-        
+
         return errores;
     }
 
@@ -460,7 +461,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }),
                 "análisis normativo"
             );
-            
+
             await procesarRespuestaMejorada(respuesta, loadingMessageDiv, question);
         } catch (error) {
             manejarErrorMejorado(error, loadingMessageDiv, question);
@@ -471,7 +472,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     async function fetchConTimeout(url, options = {}) {
         const { timeout = 45000, ...fetchOptions } = options;
-        
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -480,13 +481,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 ...fetchOptions,
                 signal: controller.signal
             });
-            
+
             clearTimeout(timeoutId);
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            
+
             return response;
         } catch (error) {
             clearTimeout(timeoutId);
@@ -607,15 +608,53 @@ document.addEventListener("DOMContentLoaded", function() {
             disclaimer.style.display = 'block';
         }
 
-        // ✅ CORRECCIÓN: Mensaje de bienvenida con HTML directo (sin markdown)
-        const auditoriaPrompt = showBotMessage(`
-            <div class="welcome-header">
-                <h3>👋 ¡Hola! Soy <strong>Auditel</strong></h3>
-                <p>Tu asistente especializado en <strong>análisis normativo de auditoría</strong></p>
-            </div>
-            <p>Para realizar un análisis preciso de las normativas aplicables, por favor selecciona el tipo de auditoría:</p>
-        `, null, false);
+        // ✅ CORRECCIÓN CRÍTICA: Crear el mensaje usando DOM en lugar de innerHTML con template literals
+        const botMessageDiv = document.createElement("div");
+        botMessageDiv.className = "chat-message bot welcome-chat-message";
 
+        const timestamp = new Date().toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // Crear elementos DOM manualmente para evitar problemas de escape
+        const messageHeader = document.createElement("div");
+        messageHeader.className = "message-header";
+        messageHeader.innerHTML = `
+            <span class="message-avatar">🔍</span>
+            <span class="message-sender">Auditel</span>
+            <span class="message-time">${timestamp}</span>
+        `;
+
+        const messageContent = document.createElement("div");
+        messageContent.className = "message-content";
+        
+        // Crear la estructura de bienvenida manualmente
+        const welcomeHeader = document.createElement("div");
+        welcomeHeader.className = "dynamic-welcome-header";
+        
+        const h3 = document.createElement("h3");
+        h3.innerHTML = '👋 ¡Hola! Soy <strong>Auditel</strong>';
+        
+        const p1 = document.createElement("p");
+        p1.innerHTML = 'Tu asistente especializado en <strong>análisis normativo de auditoría</strong>';
+        
+        welcomeHeader.appendChild(h3);
+        welcomeHeader.appendChild(p1);
+        
+        const p2 = document.createElement("p");
+        p2.textContent = 'Para realizar un análisis preciso de las normativas aplicables, por favor selecciona el tipo de auditoría:';
+        
+        messageContent.appendChild(welcomeHeader);
+        messageContent.appendChild(p2);
+        
+        botMessageDiv.appendChild(messageHeader);
+        botMessageDiv.appendChild(messageContent);
+        
+        chatBox.appendChild(botMessageDiv);
+        scrollToBottom();
+
+        // Agregar botones de selección
         const auditoriaButtons = createSelectionButtons(
             [
                 { text: '🏗️ Obra Pública', value: 'Obra Pública' },
@@ -623,7 +662,9 @@ document.addEventListener("DOMContentLoaded", function() {
             ],
             handleAuditoriaSelection
         );
-        auditoriaPrompt.appendChild(auditoriaButtons);
+        botMessageDiv.appendChild(auditoriaButtons);
+
+        return botMessageDiv;
     }
 
     // === EVENTOS GLOBALES ===

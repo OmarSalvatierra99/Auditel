@@ -1531,3 +1531,87 @@ textarea:focus-visible {
     color: var(--text-color-medium);
     margin-bottom: 16px;
 }
+
+/* ===== ESTILOS PARA MENSAJES DE BIENVENIDA DINÁMICOS ===== */
+.chat-message .dynamic-welcome-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.chat-message .dynamic-welcome-header h3 {
+    font-size: 2rem;
+    font-weight: 300;
+    margin-bottom: 12px;
+    color: var(--text-color-light);
+    background: linear-gradient(135deg, var(--text-color-light) 0%, var(--accent-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.chat-message .dynamic-welcome-header p {
+    font-size: 1.1rem;
+    color: var(--text-color-medium);
+    font-weight: 400;
+    margin-bottom: 8px;
+}
+
+.chat-message .dynamic-welcome-header strong {
+    font-weight: 700;
+    color: var(--text-color-light);
+}
+
+/* Estilo especial para el mensaje de bienvenida en el chat */
+.chat-message.welcome-chat-message {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(0, 255, 200, 0.05) 0%, transparent 100%) !important;
+    border: 1px solid var(--accent-color) !important;
+    box-shadow: var(--shadow-glow) !important;
+    max-width: 90% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.chat-message.welcome-chat-message .message-content {
+    text-align: center;
+}
+
+.chat-message.welcome-chat-message .message-content > p {
+    text-align: center;
+    color: var(--text-color-medium);
+    font-size: 1rem;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+/* Asegurar que los botones de selección se centren */
+.chat-message.welcome-chat-message .selection-buttons {
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Responsive para mensajes de bienvenida */
+@media (max-width: 768px) {
+    .chat-message .dynamic-welcome-header h3 {
+        font-size: 1.6rem;
+    }
+    
+    .chat-message .dynamic-welcome-header p {
+        font-size: 1rem;
+    }
+    
+    .chat-message.welcome-chat-message {
+        max-width: 95% !important;
+        padding: 16px 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat-message .dynamic-welcome-header h3 {
+        font-size: 1.4rem;
+    }
+    
+    .chat-message .dynamic-welcome-header p {
+        font-size: 0.95rem;
+    }
+}
